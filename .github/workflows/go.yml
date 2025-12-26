@@ -34,9 +34,12 @@ jobs:
     - name: Create-DB
       run: docker compose up -d
 
+    - name: Install psql client
+      run: sudo apt-get install -y postgresql-client
+
     - name: Wait for Postgres
       run: |
-        until docker exec $(docker ps -q -f name=postgres) pg_isready -U root; do
+        until pg_isready -h localhost -p 5432 -U root; do
         echo "Waiting for postgres..."
         sleep 2
         done
