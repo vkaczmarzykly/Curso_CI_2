@@ -33,6 +33,13 @@ jobs:
       
     - name: Create-DB
       run: docker compose up -d
+
+    - name: Wait for Postgres
+      run: |
+        until docker exec $(docker ps -q -f name=postgres) pg_isready -U root; do
+        echo "Waiting for postgres..."
+        sleep 2
+        done
       
     - name: Test
       run: go test -v main_test.go 
